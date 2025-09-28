@@ -1,0 +1,26 @@
+{
+  "name": "tp2-entrainement-correction",
+  "version": "1.0.0",
+  "description": "API REST pour système de suivi d'entraînement sportif",
+  "main": "app.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.mjs",
+    "dev": "nodemon app.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.18.2",
+    "morgan": "^1.10.1",
+    "cors": "^2.8.5",
+    "dotenv-flow": "^4.1.0",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "eslint": "^9.36.0"
+  }
+}

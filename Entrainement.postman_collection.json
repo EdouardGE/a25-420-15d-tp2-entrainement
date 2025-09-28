@@ -1,0 +1,3018 @@
+{
+	"info": {
+		"_postman_id": "e4915a47-b0a2-4714-9797-b00e22b21c64",
+		"name": "API Entraînement Sportif - TP2",
+		"description": "Collection complète de tests pour l'API de suivi d'entraînement sportif",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17489378"
+	},
+	"item": [
+		{
+			"name": "Database",
+			"item": [
+				{
+					"name": "Seed Database",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient les statistiques\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('athletes');",
+									"    pm.expect(jsonData).to.have.property('exercices');",
+									"    pm.expect(jsonData).to.have.property('seances');",
+									"    pm.expect(jsonData).to.have.property('performances');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Le nombre d'éléments est correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.athletes).to.eql(4);",
+									"    pm.expect(jsonData.exercices).to.eql(6);",
+									"    pm.expect(jsonData.seances).to.eql(4);",
+									"    pm.expect(jsonData.performances).to.eql(7);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/db/seed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"db",
+								"seed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Database Stats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient toutes les statistiques\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('athletes');",
+									"    pm.expect(jsonData).to.have.property('exercices');",
+									"    pm.expect(jsonData).to.have.property('seances');",
+									"    pm.expect(jsonData).to.have.property('performances');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/db/stats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"db",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Athletes",
+			"item": [
+				{
+					"name": "Get All Athletes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test for Content-Type header",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Le nombre d'athlètes est égal à 4\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.be.equal(4);",
+									"});",
+									"",
+									"pm.test(\"Le premier athlète a le nom et prénom corrects\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0].nom).to.equal(\"Dubois\");",
+									"        pm.expect(jsonData[0].prenom).to.equal(\"Marie\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Le dernier athlète a le nom et prénom corrects\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        const lastAthlete = jsonData[jsonData.length - 1];",
+									"        pm.expect(lastAthlete.nom).to.equal(\"Tremblay\");",
+									"        pm.expect(lastAthlete.prenom).to.equal(\"Sophie\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"La réponse est un tableau\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Les athlètes ont les champs requis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        jsonData.forEach(athlete => {",
+									"            pm.expect(athlete).to.have.property('nom');",
+									"            pm.expect(athlete).to.have.property('prenom');",
+									"            pm.expect(athlete).to.have.property('email');",
+									"            pm.expect(athlete).to.have.property('poids');",
+									"            pm.expect(athlete).to.have.property('taille');",
+									"            pm.expect(athlete).to.have.property('age');",
+									"            pm.expect(athlete).to.have.property('imc');",
+									"        });",
+									"    }",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/athletes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athletes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Athlete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Location\", function () {",
+									"    pm.response.to.have.header('Location');",
+									"});",
+									"",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"// Récupération de la réponse JSON complète",
+									"const user = pm.response.json();",
+									"",
+									"// Test: l'objet correspond à celui envoyé",
+									"pm.test(\"L'objet retourné est bien l'objet envoyé\", () => {",
+									"",
+									"    const userEnvoye = JSON.parse(pm.request.body.raw);",
+									"  ",
+									"    // nom",
+									"    pm.expect(user.nom).to.exist;",
+									"    pm.expect(user.nom.toLowerCase()).to.equal(userEnvoye.nom.toLowerCase().trim());",
+									"  ",
+									"    // prenom",
+									"    pm.expect(user.prenom).to.exist;",
+									"    pm.expect(user.prenom.toLowerCase()).to.equal(userEnvoye.prenom.toLowerCase().trim());",
+									"  ",
+									"    // email",
+									"    pm.expect(user.email).to.exist; ",
+									"    pm.expect(user.email.toLowerCase()).to.equal(userEnvoye.email.toLowerCase()); ",
+									"  ",
+									"    pm.expect(user.poids).to.eql(userEnvoye.poids);",
+									"    pm.expect(user.taille).to.eql(userEnvoye.taille);",
+									"    pm.expect(user).to.have.property('age');",
+									"    pm.expect(user).to.have.property('imc');",
+									"    pm.expect(user).to.have.property('_id');",
+									"});",
+									"",
+									"",
+									"// Enregistre l'id",
+									"pm.collectionVariables.set('newAthleteId', pm.response.json()._id);",
+									"// Modification des variables de collection",
+									"pm.collectionVariables.set(\"last_athlete_created\", JSON.stringify(user));",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \" {{$randomFirstName}}\",\n    \"prenom\": \" {{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"poids\": 70,\n    \"taille\": 175,\n    \"dateNaissance\": \"1990-05-15\"\n}\n"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/athlete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Athlete Duplicate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 409\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse d'erreur est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier la structure principale",
+									"    pm.expect(response).to.have.property(\"message\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"field\").that.is.an(\"string\");",
+									"    pm.expect(response).to.have.property(\"value\").that.is.an(\"string\");",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"{{$randomFirstName}}\",\n    \"prenom\": \"{{$randomLastName}}\",\n    \"email\": \"marie.dubois@email.com\",\n    \"poids\": 70,\n    \"taille\": 175,\n    \"dateNaissance\": \"1990-05-15\"\n}\n"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/athlete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Athlete by ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Using athleteId:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"L'athlète a tous les champs requis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('nom');",
+									"    pm.expect(jsonData).to.have.property('prenom');",
+									"    pm.expect(jsonData).to.have.property('email');",
+									"    pm.expect(jsonData).to.have.property('poids');",
+									"    pm.expect(jsonData).to.have.property('taille');",
+									"    pm.expect(jsonData).to.have.property('age');",
+									"    pm.expect(jsonData).to.have.property('imc');",
+									"    pm.expect(jsonData).to.have.property('_id');",
+									"});",
+									"",
+									"// Test avec l'athlète créé précédemment",
+									"const lastAthleteCreated = pm.collectionVariables.get('last_athlete_created');",
+									"if (lastAthleteCreated) {",
+									"    const expectedAthlete = JSON.parse(lastAthleteCreated);",
+									"    const actualAthlete = pm.response.json();",
+									"    ",
+									"    pm.test(\"L'athlète récupéré correspond à celui créé\", function () {",
+									"        pm.expect(actualAthlete._id).to.equal(expectedAthlete._id);",
+									"        pm.expect(actualAthlete.nom).to.equal(expectedAthlete.nom);",
+									"        pm.expect(actualAthlete.prenom).to.equal(expectedAthlete.prenom);",
+									"        pm.expect(actualAthlete.email).to.equal(expectedAthlete.email);",
+									"        pm.expect(actualAthlete.poids).to.equal(expectedAthlete.poids);",
+									"        pm.expect(actualAthlete.taille).to.equal(expectedAthlete.taille);",
+									"        pm.expect(actualAthlete.age).to.equal(35);",
+									"        pm.expect(actualAthlete.imc).to.equal(22.9);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/athlete/{{newAthleteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"{{newAthleteId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Athlete by ID (inexistant)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Using athleteId:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"",
+									"// Test du header Content-Type",
+									"pm.test(\"Content-type header est application/json et utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get('content-type')).to.eql('application/json; charset=utf-8');",
+									"});",
+									"",
+									"// Récupération de la réponse JSON complète",
+									"const response = pm.response.json();",
+									"",
+									"// Vérification de la structure générale de la réponse",
+									"pm.test(\"La réponse a le bon format\", function () {",
+									"    pm.expect(response).to.have.property(\"message\");",
+									"});",
+									"",
+									"// Vérification que les valeurs de la réponse sont correctes",
+									"pm.test(\"Les valeurs de la réponse sont correctes\", function () {",
+									"    pm.expect(response.message).to.be.a(\"string\").and.include(\"Athlète\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/athlete/111111111111111111111111",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"111111111111111111111111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Athlete by ID (invalide)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Using athleteId:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"const responseData = pm.response.json();",
+									"",
+									"pm.test(\"La réponse contient un champ 'message'\", function () {",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Le champ 'message' n'est pas vide\", function () {",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Le champ 'message' ne doit pas être vide\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/athlete/123",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Athlete",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Updating athlete with ID:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"L'athlète mis à jour a les données correctes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.poids).to.eql(72);",
+									"    pm.expect(jsonData).to.have.property('imc');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"poids\": 72\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/athlete/{{newAthleteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"{{newAthleteId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Athlete (inexistant)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Updating athlete with ID:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"",
+									"// Test du header Content-Type",
+									"pm.test(\"Content-type header est application/json et utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get('content-type')).to.eql('application/json; charset=utf-8');",
+									"});",
+									"",
+									"// Récupération de la réponse JSON complète",
+									"const response = pm.response.json();",
+									"",
+									"// Vérification de la structure générale de la réponse",
+									"pm.test(\"La réponse a le bon format\", function () {",
+									"    pm.expect(response).to.have.property(\"message\");",
+									"});",
+									"",
+									"// Vérification que les valeurs de la réponse sont correctes",
+									"pm.test(\"Les valeurs de la réponse sont correctes\", function () {",
+									"    pm.expect(response.message).to.be.a(\"string\").and.include(\"Athlète\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"poids\": 72\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/athlete/111111111111111111111111",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"111111111111111111111111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Athlete (invalide)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Updating athlete with ID:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"const responseData = pm.response.json();",
+									"",
+									"pm.test(\"La réponse contient un champ 'message'\", function () {",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Le champ 'message' n'est pas vide\", function () {",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Le champ 'message' ne doit pas être vide\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"poids\": 72\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/athlete/123",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Athlete Duplicate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Updating athlete with ID:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 409\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"const responseData = pm.response.json();",
+									"",
+									"pm.test(\"La réponse contient un champ 'message'\", function () {",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Le champ 'message' n'est pas vide\", function () {",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Le champ 'message' ne doit pas être vide\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"marie.dubois@email.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/athlete/{{newAthleteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"{{newAthleteId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercices",
+			"item": [
+				{
+					"name": "Get All Exercices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"La réponse est un tableau\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Les exercices ont les champs requis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0]).to.have.property('nom');",
+									"        pm.expect(jsonData[0]).to.have.property('type');",
+									"        pm.expect(jsonData[0]).to.have.property('groupeMusculaire');",
+									"        pm.expect(jsonData[0]).to.have.property('difficulte');",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercices",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Exercice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test de création d'un exercice",
+									"pm.test(\"Le statut de la réponse est 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Location\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Location\")).to.be.a(\"string\");",
+									"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/exercice/\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier les champs obligatoires",
+									"    pm.expect(response).to.have.property(\"_id\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"nom\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"type\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"groupeMusculaire\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"difficulte\").that.is.a(\"number\");",
+									"    pm.expect(response).to.have.property(\"equipement\").that.is.an(\"array\");",
+									"    pm.expect(response).to.have.property(\"createdAt\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"updatedAt\").that.is.a(\"string\");",
+									"    ",
+									"    // Vérifier les champs optionnels s'ils existent",
+									"    if (response.description !== undefined) {",
+									"        pm.expect(response.description).to.be.a(\"string\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Les valeurs enum sont valides\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier que le type est dans les valeurs autorisées",
+									"    const typesValides = [\"cardio\", \"musculation\", \"flexibilite\", \"equilibre\", \"fonctionnel\"];",
+									"    pm.expect(typesValides).to.include(response.type);",
+									"    ",
+									"    // Vérifier que le groupe musculaire est dans les valeurs autorisées",
+									"    const groupesValides = [",
+									"        \"pectoraux\", \"dos\", \"epaules\", \"biceps\", \"triceps\", \"avant-bras\",",
+									"        \"abdominaux\", \"quadriceps\", \"ischio-jambiers\", \"fessiers\", \"mollets\",",
+									"        \"corps-entier\", \"cardio\"",
+									"    ];",
+									"    pm.expect(groupesValides).to.include(response.groupeMusculaire);",
+									"});",
+									"",
+									"pm.test(\"La difficulté est dans la plage valide (1-5)\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.difficulte).to.be.within(1, 5);",
+									"    pm.expect(response.difficulte).to.be.a(\"number\");",
+									"    pm.expect(Number.isInteger(response.difficulte)).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Les contraintes de longueur sont respectées\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Nom : maximum 100 caractères",
+									"    pm.expect(response.nom.length).to.be.at.most(100);",
+									"    pm.expect(response.nom.length).to.be.at.least(1);",
+									"    ",
+									"    // Description : maximum 500 caractères (si présente)",
+									"    if (response.description !== undefined && response.description !== null) {",
+									"        pm.expect(response.description.length).to.be.at.most(500);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Le champ equipement est un tableau\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.expect(response.equipement).to.be.an(\"array\");",
+									"    ",
+									"    // Vérifier que tous les éléments du tableau sont des strings",
+									"    response.equipement.forEach(function(item) {",
+									"        pm.expect(item).to.be.a(\"string\");",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Les timestamps sont des dates valides et récentes\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier que les dates sont valides",
+									"    pm.expect(new Date(response.createdAt)).to.not.be.an(\"invalid date\");",
+									"    pm.expect(new Date(response.updatedAt)).to.not.be.an(\"invalid date\");",
+									"    ",
+									"    // Vérifier que les dates sont récentes (dans les dernières 5 minutes)",
+									"    const now = new Date();",
+									"    const createdAt = new Date(response.createdAt);",
+									"    const updatedAt = new Date(response.updatedAt);",
+									"    ",
+									"    const diffMinutesCreated = (now - createdAt) / (1000 * 60);",
+									"    const diffMinutesUpdated = (now - updatedAt) / (1000 * 60);",
+									"    ",
+									"    pm.expect(diffMinutesCreated).to.be.below(5);",
+									"    pm.expect(diffMinutesUpdated).to.be.below(5);",
+									"    ",
+									"    // Pour une création, createdAt et updatedAt devraient être identiques",
+									"    pm.expect(response.createdAt).to.equal(response.updatedAt);",
+									"});",
+									"",
+									"pm.test(\"Les données envoyées correspondent aux données reçues\", function () {",
+									"    const response = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    ",
+									"    // Vérifier tous les champs envoyés",
+									"    pm.expect(response.nom).to.equal(requestBody.nom);",
+									"    pm.expect(response.type).to.equal(requestBody.type);",
+									"    pm.expect(response.groupeMusculaire).to.equal(requestBody.groupeMusculaire);",
+									"    pm.expect(response.difficulte).to.equal(requestBody.difficulte);",
+									"    ",
+									"    // Vérifier les champs optionnels",
+									"    if (requestBody.description !== undefined) {",
+									"        pm.expect(response.description).to.equal(requestBody.description);",
+									"    }",
+									"    ",
+									"    if (requestBody.equipement !== undefined) {",
+									"        pm.expect(response.equipement).to.deep.equal(requestBody.equipement);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"L'nom de l'exercice est unique (pas de doublon)\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Si un exercice avec le même nom existait déjà, ",
+									"    // on devrait avoir une erreur de validation MongoDB",
+									"    pm.expect(response.nom).to.be.a(\"string\");",
+									"    pm.expect(response.nom.trim().length).to.be.greaterThan(0);",
+									"});",
+									"",
+									"pm.test(\"Le champ nom ne contient pas d'espaces en début/fin\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier que trim() a été appliqué",
+									"    pm.expect(response.nom).to.equal(response.nom.trim());",
+									"    ",
+									"    if (response.description !== undefined && response.description !== null) {",
+									"        pm.expect(response.description).to.equal(response.description.trim());",
+									"    }",
+									"});",
+									"",
+									"// Sauvegarder l'ID de l'exercice pour les tests suivants",
+									"pm.test(\"Sauvegarder l'ID du nouvel exercice\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set(\"newExerciceId\", response._id);",
+									"    ",
+									"    // Sauvegarder l'objet complet pour validation ultérieure",
+									"    pm.collectionVariables.set(\"last_exercice_created\", JSON.stringify(response));",
+									"    ",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"Test Exercice\",\n    \"type\": \"musculation\",\n    \"groupeMusculaire\": \"pectoraux\",\n    \"difficulte\": 3,\n    \"description\": \"Exercice de test\",\n    \"equipement\": [\"test\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/exercice",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Exercice Duplicate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 409\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse d'erreur est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier la structure principale",
+									"    pm.expect(response).to.have.property(\"message\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"field\").that.is.an(\"string\");",
+									"    pm.expect(response).to.have.property(\"value\").that.is.an(\"string\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \" Test Exercice\",\n    \"type\": \"musculation\",\n    \"groupeMusculaire\": \"pectoraux\",\n    \"difficulte\": 3,\n    \"description\": \"Exercice de test\",\n    \"equipement\": [\"test\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/exercice",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Exercice (invalide)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test d'erreur de validation pour la création d'un athlète (format JSON structuré)",
+									"pm.test(\"Le statut de la réponse est 422 Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse d'erreur est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier la structure principale",
+									"    pm.expect(response).to.have.property(\"message\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"errors\").that.is.an(\"object\");",
+									"    ",
+									"    // Vérifier que le message principal est correct",
+									"    pm.expect(response.message).to.equal(\"Erreurs de validation\");",
+									"    ",
+									"    // Vérifier que l'objet errors n'est pas vide",
+									"    pm.expect(Object.keys(response.errors)).to.have.length.greaterThan(0);",
+									"});",
+									"",
+									"pm.test(\"Les erreurs de validation contiennent les champs attendus\", function () {",
+									"    const response = pm.response.json();",
+									"    const requestBody = pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};",
+									"    ",
+									"    // Liste des champs obligatoires pour un athlète",
+									"    const requiredFields = [\"nom\", \"type\", \"groupeMusculaire\", \"difficulte\"];",
+									"    ",
+									"    // Vérifier les champs manquants selon les données envoyées",
+									"    requiredFields.forEach(field => {",
+									"        if (!requestBody[field] || requestBody[field] === \"\") {",
+									"            pm.expect(response.errors, `Le champ ${field} devrait avoir une erreur`).to.have.property(field);",
+									"        }",
+									"    });",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"invalide\",\n    \"groupeMusculaire\": \"test\",\n    \"difficulte\": 2653,\n    \"equipement\": \"test\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/exercice",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercice by ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'exercice nécessaire est défini",
+									"const newExerciceId = pm.collectionVariables.get('newExerciceId');",
+									"",
+									"if (!newExerciceId || newExerciceId === '' || newExerciceId === 'null') {",
+									"    throw new Error('newExerciceId n\\'est pas défini. Exécutez d\\'abord Create Exercice.');",
+									"}",
+									"",
+									"console.log('Using exerciceId:', newExerciceId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"L'exercice a tous les champs requis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('nom');",
+									"    pm.expect(jsonData).to.have.property('type');",
+									"    pm.expect(jsonData).to.have.property('groupeMusculaire');",
+									"    pm.expect(jsonData).to.have.property('difficulte');",
+									"});",
+									"",
+									"// Test avec l'exercice créé précédemment",
+									"const lastExerciceCreated = pm.collectionVariables.get('last_exercice_created');",
+									"if (lastExerciceCreated) {",
+									"    const expectedExercice = JSON.parse(lastExerciceCreated);",
+									"    const actualExercice = pm.response.json();",
+									"    ",
+									"    pm.test(\"L'exercice récupéré correspond à celui créé\", function () {",
+									"        pm.expect(actualExercice._id).to.equal(expectedExercice._id);",
+									"        pm.expect(actualExercice.nom).to.equal(expectedExercice.nom);",
+									"        pm.expect(actualExercice.type).to.equal(expectedExercice.type);",
+									"        pm.expect(actualExercice.groupeMusculaire).to.equal(expectedExercice.groupeMusculaire);",
+									"        pm.expect(actualExercice.difficulte).to.equal(expectedExercice.difficulte);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercice/{{newExerciceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice",
+								"{{newExerciceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercice by ID (inexistant)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"",
+									"// Test du header Content-Type",
+									"pm.test(\"Content-type header est application/json et utf-8\", () => {",
+									"    pm.expect(pm.response.headers.get('content-type')).to.eql('application/json; charset=utf-8');",
+									"});",
+									"",
+									"// Récupération de la réponse JSON complète",
+									"const response = pm.response.json();",
+									"",
+									"// Vérification de la structure générale de la réponse",
+									"pm.test(\"La réponse a le bon format\", function () {",
+									"    pm.expect(response).to.have.property(\"message\");",
+									"});",
+									"",
+									"// Vérification que les valeurs de la réponse sont correctes",
+									"pm.test(\"Les valeurs de la réponse sont correctes\", function () {",
+									"    pm.expect(response.message).to.be.a(\"string\").and.include(\"Exercice\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercice/111111111111111111111111",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice",
+								"111111111111111111111111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Exercice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"L'exercice mis à jour a les données correctes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.difficulte).to.eql(4);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"difficulte\": 4\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/exercice/{{newExerciceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice",
+								"{{newExerciceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Exercice Duplicate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 409\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"const responseData = pm.response.json();",
+									"",
+									"pm.test(\"La réponse contient un champ 'message'\", function () {",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Le champ 'message' n'est pas vide\", function () {",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Le champ 'message' ne doit pas être vide\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"Course à pied\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/exercice/{{newExerciceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice",
+								"{{newExerciceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Exercices by Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tous les exercices sont de type musculation\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.forEach(function(exercice) {",
+									"        pm.expect(exercice.type).to.eql('musculation');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercices/type/musculation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercices",
+								"type",
+								"musculation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Exercices by Muscle Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Tous les exercices ciblent les pectoraux\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.forEach(function(exercice) {",
+									"        pm.expect(exercice.groupeMusculaire).to.eql('pectoraux');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercices/groupe/pectoraux",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercices",
+								"groupe",
+								"pectoraux"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Seances",
+			"item": [
+				{
+					"name": "Get All Seances",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"La réponse est un tableau\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Les séances ont les champs requis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0]).to.have.property('athleteId');",
+									"        pm.expect(jsonData[0]).to.have.property('dateSeance');",
+									"        pm.expect(jsonData[0]).to.have.property('dureeMinutes');",
+									"    }",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/seances",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Seance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Location\", function () {",
+									"    pm.response.to.have.header('Location');",
+									"});",
+									"",
+									"const seance = pm.response.json();",
+									"",
+									"pm.test(\"La séance créée a les données correctes\", function () {",
+									"    pm.expect(seance.dureeMinutes).to.eql(60);",
+									"    pm.expect(seance.notes).to.eql('Séance de test');",
+									"    pm.expect(seance).to.have.property('caloriesBrulees');",
+									"});",
+									"",
+									"// Vérifier qu'il y a un athleteId",
+									"pm.test(\"La séance créée contient un athleteId\", function () {",
+									"    pm.expect(seance).to.have.property('athleteId');",
+									"});",
+									"",
+									"// Vérifier que _id dans athleteId correspond à newAthleteId",
+									"pm.test(\"L'ID de l'athlète correspond à newAthleteId\", function () {",
+									"    pm.expect(seance.athleteId._id).to.eql(pm.collectionVariables.get(\"newAthleteId\"));",
+									"});",
+									"",
+									"pm.test(\"Statistiques de la séance sont valides\", function () {",
+									"    const jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData.dureeMinutes).to.be.a('number');",
+									"    pm.expect(jsonData.dureeMinutes).to.be.equal(60);",
+									"    ",
+									"    pm.expect(jsonData.caloriesBrulees).to.be.a('number');",
+									"    pm.expect(jsonData.caloriesBrulees).to.be.equal(432);",
+									"",
+									"})",
+									"",
+									"// Enregistrer l'ID et l'objet complet",
+									"pm.collectionVariables.set('newSeanceId', seance._id);",
+									"pm.collectionVariables.set('last_seance_created', JSON.stringify(seance));",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Using athleteId:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"athleteId\": \"{{newAthleteId}}\",\n    \"dateSeance\": \"2024-01-20\",\n    \"dureeMinutes\": 60,\n    \"notes\": \"Séance de test\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/seance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Seance 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Location\", function () {",
+									"    pm.response.to.have.header('Location');",
+									"});",
+									"",
+									"const seance = pm.response.json();",
+									"",
+									"pm.test(\"La séance créée a les données correctes\", function () {",
+									"    pm.expect(seance.dureeMinutes).to.eql(40);",
+									"    pm.expect(seance.notes).to.eql('Séance de test2');",
+									"    pm.expect(seance).to.have.property('caloriesBrulees');",
+									"});",
+									"",
+									"// Vérifier qu'il y a un athleteId",
+									"pm.test(\"La séance créée contient un athleteId\", function () {",
+									"    pm.expect(seance).to.have.property('athleteId');",
+									"});",
+									"",
+									"// Vérifier que _id dans athleteId correspond à newAthleteId",
+									"pm.test(\"L'ID de l'athlète correspond à newAthleteId\", function () {",
+									"    pm.expect(seance.athleteId._id).to.eql(pm.collectionVariables.get(\"newAthleteId\"));",
+									"});",
+									"",
+									"// Enregistrer l'ID et l'objet complet",
+									"pm.collectionVariables.set('newSeanceId', seance._id);",
+									"pm.collectionVariables.set('last_seance_created', JSON.stringify(seance));",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Using athleteId:', newAthleteId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"athleteId\": \"{{newAthleteId}}\",\n    \"dateSeance\": \"2024-01-21\",\n    \"dureeMinutes\": 40,\n    \"notes\": \"Séance de test2\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/seance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Seance by ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de la séance nécessaire est défini",
+									"const newSeanceId = pm.collectionVariables.get('newSeanceId');",
+									"",
+									"if (!newSeanceId || newSeanceId === '' || newSeanceId === 'null') {",
+									"    throw new Error('newSeanceId n\\'est pas défini. Exécutez d\\'abord Create Seance.');",
+									"}",
+									"",
+									"console.log('Using seanceId:', newSeanceId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient la séance et les performances\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('seance');",
+									"    pm.expect(jsonData).to.have.property('performances');",
+									"    pm.expect(jsonData.performances).to.be.an('array');",
+									"});",
+									"",
+									"// Test avec la séance créée précédemment",
+									"const lastSeanceCreated = pm.collectionVariables.get('last_seance_created');",
+									"const newSeanceId = pm.collectionVariables.get('newSeanceId');",
+									"const currentUrl = pm.request.url.toString();",
+									"",
+									"if (lastSeanceCreated && currentUrl.includes(newSeanceId)) {",
+									"    const expectedSeance = JSON.parse(lastSeanceCreated);",
+									"    const actualResponse = pm.response.json();",
+									"    ",
+									"    pm.test(\"La séance récupérée correspond à celle créée\", function () {",
+									"        pm.expect(actualResponse.seance._id).to.equal(expectedSeance._id);",
+									"        pm.expect(actualResponse.seance.dureeMinutes).to.equal(expectedSeance.dureeMinutes);",
+									"        pm.expect(actualResponse.seance.notes).to.equal(expectedSeance.notes);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/seance/{{newSeanceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seance",
+								"{{newSeanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Seance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La séance mise à jour a les données correctes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.dureeMinutes).to.eql(90);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dureeMinutes\": 90\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/seance/{{newSeanceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seance",
+								"{{newSeanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Athlete Seances",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"La réponse est un tableau\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Le tableau n'est pas vide\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array').that.is.not.empty;",
+									"});",
+									"",
+									"pm.test(\"Toutes les séances appartiennent à l'athlète (si des séances existent)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    const expectedAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"    ",
+									"    if (jsonData.length > 0) {",
+									"        jsonData.forEach(function(seance, index) {",
+									"            pm.expect(seance, `Séance ${index + 1} doit avoir un athleteId`).to.have.property('athleteId');",
+									"            ",
+									"            // Vérifier que athleteId est un objet avec _id",
+									"            if (typeof seance.athleteId === 'object' && seance.athleteId._id) {",
+									"                pm.expect(seance.athleteId._id, `Séance ${index + 1} doit appartenir à l'athlète ${expectedAthleteId}`).to.eql(expectedAthleteId);",
+									"            } else {",
+									"                // Si athleteId n'est qu'un string",
+									"                pm.expect(seance.athleteId, `Séance ${index + 1} doit appartenir à l'athlète ${expectedAthleteId}`).to.eql(expectedAthleteId);",
+									"            }",
+									"        });",
+									"    } else {",
+									"        console.log(\"Aucune séance à vérifier pour l'appartenance - test ignoré\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Validation des types de données (si des séances existent)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    if (jsonData.length > 0) {",
+									"        jsonData.forEach(function(seance, index) {",
+									"            // Types obligatoires",
+									"            pm.expect(seance._id, `_id de la séance ${index + 1}`).to.be.a('string');",
+									"            pm.expect(seance.dateSeance, `dateSeance de la séance ${index + 1}`).to.be.a('string');",
+									"            pm.expect(seance.dureeMinutes, `dureeMinutes de la séance ${index + 1}`).to.be.a('number');",
+									"            pm.expect(seance.createdAt, `createdAt de la séance ${index + 1}`).to.be.a('string');",
+									"            pm.expect(seance.updatedAt, `updatedAt de la séance ${index + 1}`).to.be.a('string');",
+									"            ",
+									"            // Validation des dates",
+									"            pm.expect(new Date(seance.dateSeance), `dateSeance de la séance ${index + 1} doit être une date valide`).to.not.be.an('invalid date');",
+									"            pm.expect(new Date(seance.createdAt), `createdAt de la séance ${index + 1} doit être une date valide`).to.not.be.an('invalid date');",
+									"            pm.expect(new Date(seance.updatedAt), `updatedAt de la séance ${index + 1} doit être une date valide`).to.not.be.an('invalid date');",
+									"            ",
+									"            // Validation des plages numériques",
+									"            pm.expect(seance.dureeMinutes, `dureeMinutes de la séance ${index + 1} doit être entre 5 et 480`).to.be.within(5, 480);",
+									"            ",
+									"            if (seance.caloriesBrulees !== undefined && seance.caloriesBrulees !== null) {",
+									"                pm.expect(seance.caloriesBrulees, `caloriesBrulees de la séance ${index + 1} doit être >= 0 et 2000`).to.be.greaterThanOrEqual(0)",
+									"            }",
+									"        });",
+									"    } else {",
+									"        console.log(\"Aucune séance à valider pour les types - test ignoré\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Les séances sont triées par date décroissante (si plusieurs séances)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    if (jsonData.length > 1) {",
+									"        for (let i = 1; i < jsonData.length; i++) {",
+									"            const dateActuelle = new Date(jsonData[i-1].dateSeance);",
+									"            const dateSuivante = new Date(jsonData[i].dateSeance);",
+									"            ",
+									"            pm.expect(dateActuelle, `Les séances doivent être triées par date décroissante`).to.be.at.least(dateSuivante);",
+									"        }",
+									"        console.log(\"✅ Tri par date décroissante validé\");",
+									"    } else {",
+									"        console.log(\"Pas assez de séances pour valider le tri - test ignoré\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Les champs athleteId sont populés correctement (si des séances existent)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    if (jsonData.length > 0) {",
+									"        jsonData.forEach(function(seance, index) {",
+									"            if (typeof seance.athleteId === 'object') {",
+									"                // Si athleteId est populé",
+									"                pm.expect(seance.athleteId, `athleteId de la séance ${index + 1} doit être un objet`).to.be.an('object');",
+									"                pm.expect(seance.athleteId, `athleteId de la séance ${index + 1} doit avoir _id`).to.have.property('_id');",
+									"                pm.expect(seance.athleteId, `athleteId de la séance ${index + 1} doit avoir nom`).to.have.property('nom');",
+									"                pm.expect(seance.athleteId, `athleteId de la séance ${index + 1} doit avoir prenom`).to.have.property('prenom');",
+									"            }",
+									"        });",
+									"    } else {",
+									"        console.log(\"Aucune séance à valider pour la population - test ignoré\");",
+									"    }",
+									"});",
+									"",
+									"// Statistiques finales",
+									"pm.test(\"Statistiques des résultats\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    if (jsonData.length > 0) {",
+									"        const totalMinutes = jsonData.reduce((sum, seance) => sum + seance.dureeMinutes, 0);",
+									"        const totalHeures = (totalMinutes / 60).toFixed(1);",
+									"        console.log(`⏱️ Temps total d'entraînement: ${totalHeures} heures`);",
+									"        ",
+									"        const totalCalories = jsonData.reduce((sum, seance) => sum + (seance.caloriesBrulees || 0), 0);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/athlete/{{newAthleteId}}/seances",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"{{newAthleteId}}",
+								"seances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Athlete Statistics",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"pm.test(\"Les statistiques ont tous les champs requis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('athlete');",
+									"    pm.expect(jsonData).to.have.property('totalSeances');",
+									"    pm.expect(jsonData).to.have.property('totalHeures');",
+									"    pm.expect(jsonData).to.have.property('totalCalories');",
+									"    pm.expect(jsonData).to.have.property('dureeeMoyenne');",
+									"    pm.expect(jsonData).to.have.property('caloriesMoyennes');",
+									"    pm.expect(jsonData).to.have.property('premiereSeance');",
+									"    pm.expect(jsonData).to.have.property('derniereSeance');",
+									"});",
+									"",
+									"pm.test(\"Les informations de l'athlète sont peuplées\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.athlete).to.have.property('nom');",
+									"    pm.expect(jsonData.athlete).to.have.property('prenom');",
+									"    pm.expect(jsonData.athlete).to.have.property('age');",
+									"    pm.expect(jsonData.athlete).to.have.property('imc');",
+									"});",
+									"",
+									"pm.test(\"Statistiques de l'athlète sont valides\", function () {",
+									"    const jsonData = pm.response.json();",
+									"",
+									"    pm.expect(jsonData.totalSeances).to.be.a('number');",
+									"    pm.expect(jsonData.totalSeances).to.be.equal(2);",
+									"    ",
+									"    pm.expect(jsonData.totalHeures).to.be.a('number');",
+									"    pm.expect(jsonData.totalHeures).to.be.equal(2.5);",
+									"",
+									"    pm.expect(jsonData.totalCalories).to.be.a('number');",
+									"    pm.expect(jsonData.totalCalories).to.be.equal(720);",
+									"",
+									"    pm.expect(jsonData.dureeeMoyenne).to.be.a('number');",
+									"    pm.expect(jsonData.dureeeMoyenne).to.be.equal(75);",
+									"",
+									"    pm.expect(jsonData.caloriesMoyennes).to.be.a('number');",
+									"    pm.expect(jsonData.caloriesMoyennes).to.be.equal(360);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/athlete/{{newAthleteId}}/statistiques",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"{{newAthleteId}}",
+								"statistiques"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Performances",
+			"item": [
+				{
+					"name": "Get All Performances",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test for Content-Type header",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Le schéma de la réponse est valide\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    jsonData.forEach(performance => {",
+									"        pm.expect(performance).to.have.all.keys(",
+									"            '_id', 'seanceId', 'exerciceId', 'series', 'repetitions', 'poids', ",
+									"            'tempsRepos', 'notes', 'createdAt', 'updatedAt', 'volumeEntrainement', 'id'",
+									"        );",
+									"        pm.expect(performance.seanceId).to.have.all.keys(",
+									"            '_id', 'athleteId', 'dateSeance', 'dureeMinutes', ",
+									"            'caloriesBrulees', 'notes', 'createdAt', 'updatedAt'",
+									"        );",
+									"        pm.expect(performance.exerciceId).to.have.all.keys(",
+									"            '_id', 'nom', 'type', 'groupeMusculaire'",
+									"        );",
+									"    });",
+									"});",
+									"pm.test(\"La réponse est un tableau\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/performances",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"performances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Performance",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que les IDs nécessaires sont définis",
+									"const newSeanceId = pm.collectionVariables.get('newSeanceId');",
+									"const newExerciceId = pm.collectionVariables.get('newExerciceId');",
+									"",
+									"if (!newSeanceId || newSeanceId === '' || newSeanceId === 'null') {",
+									"    throw new Error('newSeanceId n\\'est pas défini. Exécutez d\\'abord Create Seance.');",
+									"}",
+									"",
+									"if (!newExerciceId || newExerciceId === '' || newExerciceId === 'null') {",
+									"    throw new Error('newExerciceId n\\'est pas défini. Exécutez d\\'abord Create Exercice.');",
+									"}",
+									"",
+									"console.log('Using seanceId:', newSeanceId);",
+									"console.log('Using exerciceId:', newExerciceId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test de création d'une performance",
+									"pm.test(\"Le statut de la réponse est 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Location\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Location\")).to.be.a(\"string\");",
+									"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/performance/\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier les champs obligatoires",
+									"    pm.expect(response).to.have.property(\"_id\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"seanceId\").that.is.an(\"object\");",
+									"    pm.expect(response).to.have.property(\"exerciceId\").that.is.an(\"object\");",
+									"    pm.expect(response).to.have.property(\"series\").that.is.a(\"number\");",
+									"    pm.expect(response).to.have.property(\"repetitions\").that.is.a(\"number\");",
+									"    pm.expect(response).to.have.property(\"poids\").that.is.a(\"number\");",
+									"    pm.expect(response).to.have.property(\"createdAt\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"updatedAt\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"id\").that.is.a(\"string\");",
+									"    ",
+									"    // Vérifier les champs optionnels s'ils existent",
+									"    if (response.tempsRepos !== undefined) {",
+									"        pm.expect(response.tempsRepos).to.be.a(\"number\");",
+									"    }",
+									"    if (response.notes !== undefined) {",
+									"        pm.expect(response.notes).to.be.a(\"string\");",
+									"    }",
+									"    ",
+									"    // Vérifier les champs virtuels calculés",
+									"    pm.expect(response).to.have.property(\"volumeEntrainement\").that.is.a(\"number\");",
+									"});",
+									"",
+									"pm.test(\"Les données de la séance (seanceId) sont populées correctement\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.expect(response.seanceId).to.have.property(\"_id\").that.is.a(\"string\");",
+									"    pm.expect(response.seanceId).to.have.property(\"dateSeance\").that.is.a(\"string\");",
+									"    ",
+									"    // Vérifier que la date est un format ISO valide",
+									"    pm.expect(new Date(response.seanceId.dateSeance)).to.not.be.an(\"invalid date\");",
+									"});",
+									"",
+									"pm.test(\"Les données de l'exercice (exerciceId) sont populées correctement\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.expect(response.exerciceId).to.have.property(\"_id\").that.is.a(\"string\");",
+									"    pm.expect(response.exerciceId).to.have.property(\"nom\").that.is.a(\"string\");",
+									"    pm.expect(response.exerciceId).to.have.property(\"type\").that.is.a(\"string\");",
+									"    pm.expect(response.exerciceId).to.have.property(\"groupeMusculaire\").that.is.a(\"string\");",
+									"    ",
+									"    // Vérifier les valeurs enum",
+									"    const typesValides = [\"cardio\", \"musculation\", \"flexibilite\", \"equilibre\", \"fonctionnel\"];",
+									"    pm.expect(typesValides).to.include(response.exerciceId.type);",
+									"    ",
+									"    const groupesValides = [",
+									"        \"pectoraux\", \"dos\", \"epaules\", \"biceps\", \"triceps\", \"avant-bras\",",
+									"        \"abdominaux\", \"quadriceps\", \"ischio-jambiers\", \"fessiers\", \"mollets\",",
+									"        \"corps-entier\", \"cardio\"",
+									"    ];",
+									"    pm.expect(groupesValides).to.include(response.exerciceId.groupeMusculaire);",
+									"});",
+									"",
+									"pm.test(\"Les valeurs numériques sont dans les plages valides\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier les contraintes des champs numériques",
+									"    pm.expect(response.series).to.be.within(1, 20);",
+									"    pm.expect(response.repetitions).to.be.within(1, 1000);",
+									"    pm.expect(response.poids).to.be.within(0, 1000);",
+									"    ",
+									"    if (response.tempsRepos !== undefined) {",
+									"        pm.expect(response.tempsRepos).to.be.within(0, 600);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Le volume d'entraînement est calculé correctement\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    const volumeAttendu = response.series * response.repetitions * response.poids;",
+									"    pm.expect(response.volumeEntrainement).to.equal(volumeAttendu);",
+									"});",
+									"",
+									"pm.test(\"Les timestamps sont des dates valides\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.expect(new Date(response.createdAt)).to.not.be.an(\"invalid date\");",
+									"    pm.expect(new Date(response.updatedAt)).to.not.be.an(\"invalid date\");",
+									"    ",
+									"    // Vérifier que les dates sont récentes (dans les dernières 5 minutes)",
+									"    const now = new Date();",
+									"    const createdAt = new Date(response.createdAt);",
+									"    const diffMinutes = (now - createdAt) / (1000 * 60);",
+									"    pm.expect(diffMinutes).to.be.below(5);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Les longueurs des champs texte respectent les contraintes\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    if (response.notes !== undefined && response.notes !== null) {",
+									"        pm.expect(response.notes.length).to.be.at.most(200);",
+									"    }",
+									"    ",
+									"    // Vérifier les noms des exercices",
+									"    pm.expect(response.exerciceId.nom.length).to.be.at.most(100);",
+									"});",
+									"",
+									"// Sauvegarder l'ID de la performance pour les tests suivants",
+									"pm.test(\"Sauvegarder l'ID de la nouvelle performance\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set(\"newPerformanceId\", response._id);",
+									"    ",
+									"    // Sauvegarder l'objet complet pour validation ultérieure",
+									"    pm.collectionVariables.set(\"last_performance_created\", JSON.stringify(response));",
+									"    ",
+									"});",
+									"",
+									"",
+									"// Test de validation des données envoyées vs reçues",
+									"pm.test(\"Les données envoyées correspondent aux données reçues\", function () {",
+									"    const response = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    ",
+									"    pm.expect(response.seanceId._id).to.equal(requestBody.seanceId);",
+									"    pm.expect(response.exerciceId._id).to.equal(requestBody.exerciceId);",
+									"    pm.expect(response.series).to.equal(requestBody.series);",
+									"    pm.expect(response.repetitions).to.equal(requestBody.repetitions);",
+									"    pm.expect(response.poids).to.equal(requestBody.poids);",
+									"    ",
+									"    if (requestBody.tempsRepos !== undefined) {",
+									"        pm.expect(response.tempsRepos).to.equal(requestBody.tempsRepos);",
+									"    }",
+									"    ",
+									"    if (requestBody.notes !== undefined) {",
+									"        pm.expect(response.notes).to.equal(requestBody.notes);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seanceId\": \"{{newSeanceId}}\",\n    \"exerciceId\": \"{{newExerciceId}}\",\n    \"series\": 3,\n    \"repetitions\": 10,\n    \"poids\": 50,\n    \"tempsRepos\": 120,\n    \"notes\": \"Performance de test\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/performance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"performance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Performance by ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de performance nécessaire est défini",
+									"const newPerformanceId = pm.collectionVariables.get('newPerformanceId');",
+									"",
+									"if (!newPerformanceId || newPerformanceId === '' || newPerformanceId === 'null') {",
+									"    throw new Error('newPerformanceId n\\'est pas défini. Exécutez d\\'abord Create Performance.');",
+									"}",
+									"",
+									"console.log('Using performanceId:', newPerformanceId);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"La performance a tous les champs requis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('seanceId');",
+									"    pm.expect(jsonData).to.have.property('exerciceId');",
+									"    pm.expect(jsonData).to.have.property('series');",
+									"    pm.expect(jsonData).to.have.property('repetitions');",
+									"    pm.expect(jsonData).to.have.property('poids');",
+									"    pm.expect(jsonData).to.have.property('volumeEntrainement');",
+									"});",
+									"",
+									"// Test avec la performance créée précédemment",
+									"const lastPerformanceCreated = pm.collectionVariables.get('last_performance_created');",
+									"const newPerformanceId = pm.collectionVariables.get('newPerformanceId');",
+									"const currentUrl = pm.request.url.toString();",
+									"",
+									"if (lastPerformanceCreated && currentUrl.includes(newPerformanceId)) {",
+									"    const expectedPerformance = JSON.parse(lastPerformanceCreated);",
+									"    const actualPerformance = pm.response.json();",
+									"    ",
+									"    pm.test(\"La performance récupérée correspond à celle créée\", function () {",
+									"        pm.expect(actualPerformance._id).to.equal(expectedPerformance._id);",
+									"        pm.expect(actualPerformance.series).to.equal(expectedPerformance.series);",
+									"        pm.expect(actualPerformance.repetitions).to.equal(expectedPerformance.repetitions);",
+									"        pm.expect(actualPerformance.poids).to.equal(expectedPerformance.poids);",
+									"        pm.expect(actualPerformance.volumeEntrainement).to.equal(expectedPerformance.volumeEntrainement);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/performance/{{newPerformanceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"performance",
+								"{{newPerformanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Performance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Le Content-Type est application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La performance mise à jour a les données correctes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.poids).to.eql(55);",
+									"    pm.expect(jsonData.volumeEntrainement).to.eql(1650);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"poids\": 55\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/performance/{{newPerformanceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"performance",
+								"{{newPerformanceId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Error Tests",
+			"item": [
+				{
+					"name": "Invalid Athlete Creation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test d'erreur de validation pour la création d'un athlète (format JSON structuré)",
+									"pm.test(\"Le statut de la réponse est 422 Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse d'erreur est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier la structure principale",
+									"    pm.expect(response).to.have.property(\"message\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"errors\").that.is.an(\"object\");",
+									"    ",
+									"    // Vérifier que le message principal est correct",
+									"    pm.expect(response.message).to.equal(\"Erreurs de validation\");",
+									"    ",
+									"    // Vérifier que l'objet errors n'est pas vide",
+									"    pm.expect(Object.keys(response.errors)).to.have.length.greaterThan(0);",
+									"});",
+									"",
+									"pm.test(\"Les erreurs de validation contiennent les champs attendus\", function () {",
+									"    const response = pm.response.json();",
+									"    const requestBody = pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};",
+									"    ",
+									"    // Liste des champs obligatoires pour un athlète",
+									"    const requiredFields = [\"nom\", \"prenom\", \"email\", \"poids\", \"taille\", \"dateNaissance\"];",
+									"    ",
+									"    // Vérifier les champs manquants selon les données envoyées",
+									"    requiredFields.forEach(field => {",
+									"        if (!requestBody[field] || requestBody[field] === \"\") {",
+									"            pm.expect(response.errors, `Le champ ${field} devrait avoir une erreur`).to.have.property(field);",
+									"        }",
+									"    });",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nom\": \"\",\n    \"email\": \"invalid-email\",\n    \"dateNaissance\": \"1850-05-15\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/athlete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Performance with Invalid Seance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test d'erreur de validation pour la création d'un athlète (format JSON structuré)",
+									"pm.test(\"Le statut de la réponse est 404 Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse d'erreur est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    // Vérifier la structure principale",
+									"    pm.expect(response).to.have.property(\"message\").that.is.a(\"string\");",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seanceId\": \"507f1f77bcf86cd799439011\",\n    \"exerciceId\": \"{{newExerciceId}}\",\n    \"series\": 3,\n    \"repetitions\": 10,\n    \"poids\": 50\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/performance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"performance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Performance (invalide)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test d'erreur de validation pour la création d'un athlète (format JSON structuré)",
+									"pm.test(\"Le statut de la réponse est 422 Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un en-tête Content-Type JSON\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"La structure de la réponse d'erreur est correcte\", function () {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Vérifier la structure principale",
+									"    pm.expect(response).to.have.property(\"message\").that.is.a(\"string\");",
+									"    pm.expect(response).to.have.property(\"errors\").that.is.an(\"object\");",
+									"    ",
+									"    // Vérifier que le message principal est correct",
+									"    pm.expect(response.message).to.equal(\"Erreurs de validation\");",
+									"    ",
+									"    // Vérifier que l'objet errors n'est pas vide",
+									"    pm.expect(Object.keys(response.errors)).to.have.length.greaterThan(0);",
+									"});",
+									"",
+									"pm.test(\"Les erreurs de validation contiennent les champs attendus\", function () {",
+									"    const response = pm.response.json();",
+									"    const requestBody = pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};",
+									"    ",
+									"    // Liste des champs obligatoires pour un athlète",
+									"    const requiredFields = [\"series\", \"repetitions\", \"poids\"];",
+									"    ",
+									"    // Vérifier les champs manquants selon les données envoyées",
+									"    requiredFields.forEach(field => {",
+									"        if (!requestBody[field] || requestBody[field] === \"\") {",
+									"            pm.expect(response.errors, `Le champ ${field} devrait avoir une erreur`).to.have.property(field);",
+									"        }",
+									"    });",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seanceId\": \"{{newSeanceId}}\",\n    \"exerciceId\": \"{{newExerciceId}}\",\n    \"series\": 12123,\n    \"repetitions\": 112120,\n    \"poids\": 501212\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/performance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"performance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Route Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"La réponse contient un message d'erreur de route\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.include('Route ou ressource introuvable');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/nonexistent-route",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nonexistent-route"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Suppression",
+			"item": [
+				{
+					"name": "Delete Exercice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercice/{{newExerciceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercice",
+								"{{newExerciceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Performance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/performance/{{newPerformanceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"performance",
+								"{{newPerformanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Seance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/seance/{{newSeanceId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"seance",
+								"{{newSeanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Athlete",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Vérifier que l'ID de l'athlète nécessaire est défini",
+									"const newAthleteId = pm.collectionVariables.get('newAthleteId');",
+									"",
+									"if (!newAthleteId || newAthleteId === '' || newAthleteId === 'null') {",
+									"    throw new Error('newAthleteId n\\'est pas défini. Exécutez d\\'abord Create Athlete.');",
+									"}",
+									"",
+									"console.log('Deleting athlete with ID:', newAthleteId);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Le code de statut est 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/athlete/{{newAthleteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"athlete",
+								"{{newAthleteId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "newAthleteId",
+			"value": ""
+		},
+		{
+			"key": "newExerciceId",
+			"value": ""
+		},
+		{
+			"key": "newSeanceId",
+			"value": ""
+		},
+		{
+			"key": "newPerformanceId",
+			"value": ""
+		},
+		{
+			"key": "last_athlete_created",
+			"value": ""
+		},
+		{
+			"key": "last_exercice_created",
+			"value": ""
+		},
+		{
+			"key": "last_seance_created",
+			"value": ""
+		},
+		{
+			"key": "last_performance_created",
+			"value": ""
+		},
+		{
+			"key": "exerciceId",
+			"value": ""
+		},
+		{
+			"key": "seanceId",
+			"value": ""
+		},
+		{
+			"key": "performanceId",
+			"value": ""
+		},
+		{
+			"key": "newPerformanceObject",
+			"value": ""
+		}
+	]
+}

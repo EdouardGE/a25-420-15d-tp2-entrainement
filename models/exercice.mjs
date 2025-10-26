@@ -9,9 +9,63 @@ const exerciceSchema = new Schema(
       trim: true,
       unique: true,
     },
+     type: {
+      type: String,
+      required: [true,
+         "Le champ `type` est requis!",
+        ],
+      enum: {
+        values: ['cardio', 'musculation', 'flexibilite', 'equilibre', 'fonctionnel'],
+        message:
+          "Le type doit être parmi: 'cardio', 'musculation', 'flexibilite', 'equilibre', 'fonctionnel'.",
+      },
+    },
 
-    // ... à compléter
-    
+    groupeMusculaire: {
+      type: String,
+      required: [
+        true,
+         "Le champ `groupeMusculaire` est requis!",
+        ],
+      enum: {
+        values: [
+          'pectoraux',
+          'dos',
+          'epaules',
+          'biceps',
+          'triceps',
+          'avant-bras',
+          'abdominaux',
+          'quadriceps',
+          'ischio-jambiers',
+          'fessiers',
+          'mollets',
+          'corps-entier',
+          'cardio',
+        ],
+        message:
+          "Le groupe musculaire doit être parmi les valeurs autorisées (pectoraux, dos, etc.).",
+      },
+    },
+
+    difficulte: {
+      type: Number,
+      required: [true, "Le champ `difficulte` est requis!"],
+      min: [1, "La difficulté minimale est 1."],
+      max: [5, "La difficulté maximale est 5."],
+    },
+
+    description: {
+      type: String,
+      maxlength: [500, "La description ne doit pas dépasser 500 caractères!"],
+      default: "",
+      trim: true,
+    },
+
+    equipement: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

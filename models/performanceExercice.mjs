@@ -7,8 +7,54 @@ const performanceExerciceSchema = new Schema(
       ref: 'Seance',
       required: [true, "Le champ `seanceId` est requis!"],
     },
+    exerciceId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Exercice',
+      required: [true, "Le champ `exerciceId` est requis!"],
+    },
+    series: {
+      type: Number,
+      required: [true, "Le champ `series` est requis!"],
+      min: [1, "Le nombre de séries doit être au moins 1."],
+      max: [20, "Le nombre de séries ne peut pas dépasser 20."],
+    },
 
-    // ... à compléter
+    repetitions: {
+      type: Number,
+      required: [true, "Le champ `repetitions` est requis!"],
+      min: [1, "Le nombre de répétitions doit être au moins 1."],
+      max: [1000, "Le nombre de répétitions ne peut pas dépasser 1000."],
+    },
+
+    poids: {
+      type: Number,
+      required: [true, "Le champ `poids` est requis!"],
+      default: 0,
+      min: [1, "Le poids doit être au moins 1 kg."],
+      max: [1000, "Le poids ne peut pas dépasser 1000 kg."],
+    },
+
+    tempsRepos: {
+      type: Number,
+      required: [true, "Le champ `tempsRepos` est requis!"],
+      min: [0, "Le temps de repos doit être au moins 0 secondes."],
+      max: [600, "Le temps de repos ne peut pas dépasser 600 secondes."],
+    },
+
+    notes: {
+      type: String,
+      maxlength: [200, "Les notes ne peuvent pas dépasser 200 caractères."],
+    },
+
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
 
   },
   {
@@ -22,9 +68,13 @@ const performanceExerciceSchema = new Schema(
  * Volume = séries × répétitions × poids
  */
 performanceExerciceSchema.virtual('volumeEntrainement').get(function() {
-
-  // ... à compléter
-  
+  if (!this.series || !this.repetitions || !this.poids) {
+    return null;
+  }
+  if (this.poids === 0) {
+    return 0;
+  }
+  return this.series * this.repetitions * this.poids;
 });
 
 

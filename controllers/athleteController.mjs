@@ -59,7 +59,7 @@ export const obtenirAthleteParId = async (req, res, next) => {
  * Mettre à jour un athlète
  */
 export const mettreAJourAthlete = async (req, res, next) => {
-   
+
 
 };
 

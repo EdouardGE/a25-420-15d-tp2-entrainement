@@ -20,28 +20,54 @@ export const obtenirToutesLesSeances = async (req, res, next) => {
  * Créer une nouvelle séance
  */
 export const creerSeance = async (req, res, next) => {
-    // ... à compléter
+  try {
+    const { athleteId, dateSeance, dureeMinutes, notes } = req.body;
+
+    const nouvelleSeance = new Seance({ athleteId, dateSeance, dureeMinutes, notes });
+    await nouvelleSeance.calculerCalories();
+
+    const seanceSauvegardee = await nouvelleSeance.save();
+
+    res
+      .status(201)
+      .location(`/seances/${seanceSauvegardee._id}`)
+      .json(seanceSauvegardee);
+  } catch (error) {
+    next(error);
+  }
 };
+
 
 /**
  * Obtenir une séance par ID avec ses performances
  */
 export const obtenirSeanceParId = async (req, res, next) => {
-    // ... à compléter
+  // ... à compléter
 };
 
 /**
  * Mettre à jour une séance
  */
 export const mettreAJourSeance = async (req, res, next) => {
-    // ... à compléter
+  // ... à compléter
 };
 
 /**
  * Supprimer une séance
  */
 export const supprimerSeance = async (req, res, next) => {
-  // ... à compléter
+  try {
+    const SeeanceSupp = await Seance.findByIdAndDelete(req.params.SeanceId);
+    if (!SeeanceSupp) {
+      return res.status(404).json({
+        message: "Exercice introuvable avec l'ID fourni"
+      });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**

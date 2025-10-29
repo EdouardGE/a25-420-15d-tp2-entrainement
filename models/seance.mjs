@@ -11,7 +11,7 @@ const seanceSchema = new Schema(
       type: Date,
       required: [true, "Le champ `dateSeance` est requis!"],
       validate: {
-        validator: function(value) {
+        validator: function (value) {
           return value <= new Date();
         },
         message: "La date de séance ne peut pas être dans le futur!",
@@ -43,17 +43,26 @@ const seanceSchema = new Schema(
  * Méthode pour calculer automatiquement les calories brûlées
  * basée sur le poids de l'athlète et la durée
  */
-seanceSchema.methods.calculerCalories = async function() {
+seanceSchema.methods.calculerCalories = async function () {
   try {
     const Athlete = mongoose.model('Athlete');
     const athlete = await Athlete.findById(this.athleteId);
-    console.log('Athlete trouvé pour le calcul des calories:', athlete);
 
-    // ... à compléter
+    if (!athlete) {
+      console.error("Aucun athlète trouvé pour l'ID :", this.athleteId);
+      return 0;
+    }
 
+    const dureeHeures = this.dureeMinutes / 60;
+    const facteurIntensite = 6;
 
+    const calories = athlete.poids * dureeHeures * facteurIntensite;
+    this.caloriesBrulees = Math.round(calories);
+
+    return this.caloriesBrulees;
   } catch (error) {
-    console.error('Erreur lors du calcul des calories:', error);
+    console.error("Erreur lors du calcul des calories :", error);
+    return 0;
   }
 };
 

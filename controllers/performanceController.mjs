@@ -6,7 +6,14 @@ import Exercice from '../models/exercice.mjs';
  * Obtenir toutes les performances
  */
 export const obtenirToutesLesPerformances = async (req, res, next) => {
-  // ... à compléter
+  try {
+      const perfo = await PerformanceExercice.find()
+        .populate('seanceId')
+        .sort({ createdAt: -1 });
+      res.status(200).json(perfo);
+    } catch (error) {
+      next(error);
+    }
 };
 
 /**
@@ -34,6 +41,17 @@ export const mettreAJourPerformance = async (req, res, next) => {
  * Supprimer une performance
  */
 export const supprimerPerformance = async (req, res, next) => {
-  // ... à compléter
+  try {
+    const perfoSupp = await PerformanceExercice.findByIdAndDelete(req.params.performanceId);
+
+    if (!perfoSupp) {
+      return res.status(404).json({
+        message: "PerformanceExercice introuvable avec l'ID fourni",
+      });
+    }
+    return res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 };
 

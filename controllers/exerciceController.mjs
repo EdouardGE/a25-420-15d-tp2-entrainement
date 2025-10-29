@@ -78,12 +78,38 @@ export const supprimerExercice = async (req, res, next) => {
  * Rechercher des exercices par type trié par nom
  */
 export const rechercherExercicesParType = async (req, res, next) => {
-  // ... à compléter
+  try {
+    const exercices = await Exercice.find(req.params);
+
+    if (exercices.length === 0) {
+      return res.status(404).json({
+        message: "Aucun exercice trouvé",
+      });
+    }
+    return res.status(200).json(exercices);
+  } catch (error) {
+    next(error);
+  }
+
 };
 
 /**
  * Rechercher des exercices par groupe musculaire trié par nom
  */
 export const rechercherExercicesParGroupeMusculaire = async (req, res, next) => {
-  // ... à compléter
+  try {
+    const { groupe } = req.params; 
+
+    const exercices = await Exercice.find({ groupeMusculaire: groupe });
+
+    if (exercices.length === 0) {
+      return res.status(404).json({
+        message: `Aucun exercice trouvé pour le groupe musculaire '${groupe}'`,
+      });
+    }
+
+    return res.status(200).json(exercices);
+  } catch (error) {
+    next(error);
+  }
 };

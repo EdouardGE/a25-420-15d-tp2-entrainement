@@ -20,7 +20,7 @@ export const creerExercice = async (req, res, next) => {
   try {
     const nouvelExercice = new Exercice(req.body);
     const exerciceSauvegarde = await nouvelExercice.save();
-    
+
     res.status(201)
       .location(`/exercice/${exerciceSauvegarde._id}`)
       .json(exerciceSauvegarde);
@@ -35,13 +35,13 @@ export const creerExercice = async (req, res, next) => {
 export const obtenirExerciceParId = async (req, res, next) => {
   try {
     const exercice = await Exercice.findById(req.params.exerciceId);
-    
+
     if (!exercice) {
-      return res.status(404).json({ 
-        message: "Exercice introuvable avec l'ID fourni" 
+      return res.status(404).json({
+        message: "Exercice introuvable avec l'ID fourni"
       });
     }
-    
+
     res.status(200).json(exercice);
   } catch (error) {
     next(error);
@@ -61,13 +61,13 @@ export const mettreAJourExercice = async (req, res, next) => {
 export const supprimerExercice = async (req, res, next) => {
   try {
     const exerciceSupp = await Exercice.findByIdAndDelete(req.params.exerciceId);
-    
+
     if (!exerciceSupp) {
-      return res.status(404).json({ 
-        message: "Exercice introuvable avec l'ID fourni" 
+      return res.status(404).json({
+        message: "Exercice introuvable avec l'ID fourni"
       });
     }
-    
+
     res.status(204).send();
   } catch (error) {
     next(error);

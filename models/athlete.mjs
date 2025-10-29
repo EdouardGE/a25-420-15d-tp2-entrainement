@@ -49,34 +49,24 @@ const athleteSchema = new Schema(
         true,
         "Le champ `email` est requis! ",
       ],
-      match: [emailRegex, "Please enter a valid email address."],
+      match: [regexCourriel, "Please enter a valid email address."],
       trim: true,
     },
     poids: {
       type: Number,
-      null: [
-        false,
-        "Le champ `poids` ne doit pas être nul!",
-      ],
-      required: [
-        true,
-        "Le champ `poids` est requis! ",
-      ],
-      min: [20, "Le poids doit dépasser 20 kilos !"],
-      max: [30, "Le poids doit être en dessus de 300 kg !"]
+      required: [true, "Le champ `poids` est requis!"],
+      min: [20, "Le poids doit dépasser 20 kilos!"],
+      max: [300, "Le poids doit être en dessous de 300 kg!"]
     },
+
     taille: {
       type: Number,
-      null: [
-        false,
-        "Le champ `taille` ne doit pas être nul!",
-      ],
       required: [
         true,
         "Le champ `taille` est requis! ",
       ],
       min: [100, "La taille doit dépasser 100 cm !"],
-      max: [30, "La taille doit être en dessus de 250 cm !"]
+      max: [250, "La taille doit être en dessus de 250 cm !"]
     },
 
     dateNaissance: {

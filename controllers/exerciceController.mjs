@@ -52,7 +52,6 @@ export const obtenirExerciceParId = async (req, res, next) => {
  * Mettre à jour un exercice
  */
 export const mettreAJourExercice = async (req, res, next) => {
-  // ... à compléter
   try {
     const { exerciceId } = req.params;
 

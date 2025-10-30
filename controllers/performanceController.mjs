@@ -1,26 +1,27 @@
 import PerformanceExercice from '../models/performanceExercice.mjs';
 import Seance from '../models/seance.mjs';
 import Exercice from '../models/exercice.mjs';
+import performanceExercice from '../models/performanceExercice.mjs';
 
 /**
  * Obtenir toutes les performances
  */
 export const obtenirToutesLesPerformances = async (req, res, next) => {
   try {
-      const perfo = await PerformanceExercice.find()
-        .populate('seanceId')
-        .sort({ createdAt: -1 });
-      res.status(200).json(perfo);
-    } catch (error) {
-      next(error);
-    }
+    const perfo = await PerformanceExercice.find()
+      .populate('seanceId')
+      .sort({ createdAt: -1 });
+    res.status(200).json(perfo);
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**
  * Créer une nouvelle performance
  */
 export const creerPerformance = async (req, res, next) => {
-  // ... à compléter
+
   try {
     const nouvellePerformance = new PerformanceExercice(req.body);
     const performanceSauvegarde = await nouvellePerformance.save();
@@ -36,14 +37,25 @@ export const creerPerformance = async (req, res, next) => {
  * Obtenir une performance par ID
  */
 export const obtenirPerformanceParId = async (req, res, next) => {
-  // ... à compléter
+    try {
+      const performance = await performanceExercice.findById(req.params.performanceId);
+
+      if (!performance) {
+        return res.status(404).json({
+          message: "Performance introuvable avec l'ID fourni"
+        });
+      }
+
+      res.status(200).json(performance);
+    } catch (error) {
+      next(error);
+    }
 };
 
 /**
  * Mettre à jour une performance
  */
 export const mettreAJourPerformance = async (req, res, next) => {
-  // ... à compléter
   try {
     const { performanceId } = req.params;
 

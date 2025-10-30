@@ -42,14 +42,29 @@ export const creerSeance = async (req, res, next) => {
  * Obtenir une séance par ID avec ses performances
  */
 export const obtenirSeanceParId = async (req, res, next) => {
-  // ... à compléter
+  try {
+    const { seanceId } = req.params;
+
+    const seance = await Seance.findById(seanceId).populate('athleteId');
+
+    if (!seance) {
+      return res.status(404).json({
+        message: "Séance introuvable avec l'ID fourni"
+      });
+    }
+
+    const performances = await PerformanceExercice.find({ seanceId }).populate("exerciceId", "nom type groupeMusculaire");
+
+    res.status(200).json({ seance, performances });
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**
  * Mettre à jour une séance
  */
 export const mettreAJourSeance = async (req, res, next) => {
-  // ... à compléter
   try{
     const {seanceId} = req.params;
 

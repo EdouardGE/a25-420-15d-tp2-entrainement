@@ -20,7 +20,7 @@ export const creerAthlete = async (req, res, next) => {
     const nouvelAthlete = new Athlete(req.body);
     const AthleteSauvegarde = await nouvelAthlete.save();
     res.status(201)
-      .location(`/exercice/${AthleteSauvegarde._id}`)
+      .location(`/athlete/${AthleteSauvegarde._id}`)
       .json(AthleteSauvegarde);
   } catch (error) {
     next(error);
@@ -59,9 +59,28 @@ export const obtenirAthleteParId = async (req, res, next) => {
  * Mettre à jour un athlète
  */
 export const mettreAJourAthlete = async (req, res, next) => {
+  try {
+    const { athleteId } = req.params;
 
+    const athlete = await Athlete.findById(athleteId);
+    if (!athlete) {
+      return res.status(404).json({ message: "Athlète non trouvé." });
+    }
 
+    const champs = ["nom", "prenom", "email", "dateNaissance", "poids", "taille"];
+    champs.forEach(champ => {
+      if (req.body[champ] !== undefined) {
+        athlete[champ] = req.body[champ];
+      }
+    });
+
+    const athleteMisAJour = await athlete.save();
+    res.status(200).location(`/athlete/${athleteMisAJour._id}`).json(athleteMisAJour);
+  } catch (error) {
+    next(error);
+  }
 };
+
 
 /**
  * Supprimer un athlète

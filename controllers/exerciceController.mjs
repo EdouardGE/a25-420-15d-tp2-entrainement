@@ -53,6 +53,26 @@ export const obtenirExerciceParId = async (req, res, next) => {
  */
 export const mettreAJourExercice = async (req, res, next) => {
   // ... à compléter
+  try {
+    const { exerciceId } = req.params;
+
+    const exercice = await Exercice.findById(exerciceId);
+    if (!exercice) {
+      return res.status(404).json({ message: "Exercice non trouvé." });
+    }
+
+    const champs = ["nom", "type", "groupeMusculaire", "difficulte", "description", "equipement"];
+    champs.forEach(champ => {
+      if (req.body[champ] !== undefined) {
+        exercice[champ] = req.body[champ];
+      }
+    });
+
+    const exerciceMisAJour = await exercice.save();
+    res.status(200).location(`/exercice/${exerciceMisAJour._id}`).json(exerciceMisAJour);
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**
@@ -98,7 +118,7 @@ export const rechercherExercicesParType = async (req, res, next) => {
  */
 export const rechercherExercicesParGroupeMusculaire = async (req, res, next) => {
   try {
-    const { groupe } = req.params; 
+    const { groupe } = req.params;
 
     const exercices = await Exercice.find({ groupeMusculaire: groupe });
 

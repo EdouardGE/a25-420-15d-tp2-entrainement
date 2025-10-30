@@ -9,7 +9,7 @@ const exerciceSchema = new Schema(
       trim: true,
       unique: true,
     },
-     type: {
+    type: {
       type: String,
       required: [true,
          "Le champ `type` est requis!",

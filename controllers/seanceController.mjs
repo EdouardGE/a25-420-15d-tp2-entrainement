@@ -109,8 +109,26 @@ export const supprimerSeance = async (req, res, next) => {
  * Obtenir les séances d'un athlète
  */
 export const obtenirSeancesParAthlete = async (req, res, next) => {
-  // ... à compléter
+  try {
+
+    const { athleteId } = req.params;
+
+    const athlete = await Athlete.findById(athleteId);
+
+    if (!athlete) {
+      return res.status(404).json({
+        message: "Athlète introuvable avec l'ID fourni"
+      });
+    }
+
+    const seances = await Seance.find({ athleteId }).populate('athleteId', 'nom prenom age imc').sort({ dateSeance: -1 });
+
+    res.status(200).json(seances);
+  } catch (error) {
+    next(error);
+  }
 };
+
 
 /**
  * Obtenir les statistiques d'un athlète

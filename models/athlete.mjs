@@ -55,8 +55,8 @@ const athleteSchema = new Schema(
     poids: {
       type: Number,
       required: [true, "Le champ `poids` est requis!"],
-      min: [20, "Le poids doit dépasser 20 kilos!"],
-      max: [300, "Le poids doit être en dessous de 300 kg!"]
+      min: [20, "Le poids doit être au moins 20 kg."],
+      max: [300, "Le poids doit être au plus 300 kg."]
     },
 
     taille: {

@@ -50,6 +50,26 @@ export const obtenirSeanceParId = async (req, res, next) => {
  */
 export const mettreAJourSeance = async (req, res, next) => {
   // ... à compléter
+  try{
+    const {seanceId} = req.params;
+
+    const seance = await Seance.findById(seanceId);
+    if (!seance) {
+      return res.status(404).json({message: "Séance non trouvée."});
+    }
+
+    const champs = ["athleteId", "dateSeance", "dureeMinutes", "notes"];
+    champs.forEach(champ => {
+      if(req.body[champ] !== undefined){
+        seance[champ] = req.body[champ];
+      }
+    });
+
+    const seanceMisAJour = await seance.save();
+    res.status(200).location(`/seances/${seanceMisAJour._id}`).json(seanceMisAJour);
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**

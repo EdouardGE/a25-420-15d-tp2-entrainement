@@ -134,7 +134,6 @@ export const obtenirSeancesParAthlete = async (req, res, next) => {
  * Obtenir les statistiques d'un athlète
  */
 export const obtenirStatistiquesAthlete = async (req, res, next) => {
-  // ... à compléter
   try{
     const { athleteId } = req.params;
 

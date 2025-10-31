@@ -28,10 +28,12 @@ export const creerSeance = async (req, res, next) => {
 
     const seanceSauvegardee = await nouvelleSeance.save();
 
+    const seanceComplete = await seanceSauvegardee.populate("athleteId");
+
     res
       .status(201)
       .location(`/seances/${seanceSauvegardee._id}`)
-      .json(seanceSauvegardee);
+      .json(seanceComplete);
   } catch (error) {
     next(error);
   }

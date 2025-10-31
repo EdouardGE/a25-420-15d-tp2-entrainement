@@ -10,6 +10,7 @@ export const obtenirToutesLesPerformances = async (req, res, next) => {
   try {
     const perfo = await PerformanceExercice.find()
       .populate('seanceId')
+      .populate('exerciceId', '_id nom type groupeMusculaire')
       .sort({ createdAt: -1 });
     res.status(200).json(perfo);
   } catch (error) {
@@ -24,10 +25,14 @@ export const creerPerformance = async (req, res, next) => {
 
   try {
     const nouvellePerformance = new PerformanceExercice(req.body);
+
     const performanceSauvegarde = await nouvellePerformance.save();
+
+    const performancePopulee = await PerformanceExercice.findById(performanceSauvegarde._id).populate('seanceId').populate('exerciceId');
+
     res.status(201)
       .location(`/performance/${performanceSauvegarde._id}`)
-      .json(performanceSauvegarde);
+      .json(performancePopulee);
   } catch (error) {
     next(error);
   }

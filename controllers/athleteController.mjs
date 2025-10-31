@@ -62,6 +62,10 @@ export const mettreAJourAthlete = async (req, res, next) => {
   try {
     const { athleteId } = req.params;
 
+    if (!athleteId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(422).json({ message: "ID d'athlète invalide." });
+    }
+
     const athlete = await Athlete.findById(athleteId);
     if (!athlete) {
       return res.status(404).json({ message: "Athlète non trouvé." });
@@ -77,6 +81,9 @@ export const mettreAJourAthlete = async (req, res, next) => {
     const athleteMisAJour = await athlete.save();
     res.status(200).location(`/athlete/${athleteMisAJour._id}`).json(athleteMisAJour);
   } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(422).json({ message: error.message });
+    }
     next(error);
   }
 };

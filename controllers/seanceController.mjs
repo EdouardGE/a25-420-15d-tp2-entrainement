@@ -38,6 +38,7 @@ export const creerSeance = async (req, res, next) => {
 };
 
 
+
 /**
  * Obtenir une séance par ID avec ses performances
  */
@@ -143,16 +144,16 @@ export const obtenirStatistiquesAthlete = async (req, res, next) => {
       return res.status(404).json({ message: "Athlète introuvable avec l'ID fourni." });
     }
 
-    const seances = await Seance.find({ athleteId }).select('dureeMinutes caloriesBrulees dateSeance');
+    const seances = await Seance.find({ athleteId }).select('dureeMinutes caloriesBrulees dateSeance').sort({ dateSeance: -1 });
 
     if (seances.length === 0) {
       return res.status(200).json({
         athlete,
         totalSeances: 0,
-        totalHeuresEntrainement: 0,
-        totalCaloriesBrulees: 0,
-        moyenneDureeSeance: 0,
-        moyenneCaloriesParSeance: 0,
+        totalHeures: 0,
+        totalCalories: 0,
+        dureeeMoyenne: 0,
+        caloriesMoyennes: 0,
         premiereSeance: null,
         derniereSeance: null
       });
@@ -164,55 +165,40 @@ export const obtenirStatistiquesAthlete = async (req, res, next) => {
       (totalMinutes, seance) => totalMinutes + seance.dureeMinutes, 0
     );
 
-    const totalHeuresEntrainement = parseFloat(
-      (totalMinutesEntrainement / 60).toFixed(1)
-    );
+    const totalHeures = parseFloat((totalMinutesEntrainement / 60).toFixed(1));
 
-    const totalCaloriesBrulees = Math.round(
+    const totalCalories = Math.round(
       seances.reduce((total, seance) => total + seance.caloriesBrulees, 0)
     );
 
-    const moyenneDureeSeance = Math.round(
-      totalMinutesEntrainement / totalSeances
-    );
+    const dureeeMoyenne = Math.round(totalMinutesEntrainement / totalSeances);
 
-    const moyenneCaloriesParSeance = Math.round(
-      totalCaloriesBrulees / totalSeances
-    );
+    const caloriesMoyennes = Math.round(totalCalories / totalSeances);
 
-    const premiereSeanceFormatSimple = seances.reduce((plusAncienne, courante) => {
-      const dateCourante = new Date(courante.dateSeance);
-      const datePlusAncienne = new Date(plusAncienne.dateSeance);
-
-      if (dateCourante < datePlusAncienne) {
-        return courante;
-      } else {
-        return plusAncienne;
+    let premiereSeanceDate = seances[0];
+    for (let i = 1; i < seances.length; i++) {
+      if (new Date(seances[i].dateSeance) < new Date(premiereSeanceDate.dateSeance)) {
+        premiereSeanceDate = seances[i];
       }
-    }, seances[0]);
+    }
 
-    const premiereSeance = new Date(premiereSeanceFormatSimple.dateSeance).toISOString();
-
-    const derniereSeanceFormatSimple = seances.reduce((plusAncienne, courante) => {
-      const dateCourante = new Date(courante.dateSeance);
-      const datePlusAncienne = new Date(plusAncienne.dateSeance);
-
-      if (dateCourante > datePlusAncienne) {
-        return courante;
-      } else {
-        return plusAncienne;
+    let derniereSeanceDate = seances[0];
+    for (let i = 1; i < seances.length; i++) {
+      if (new Date(seances[i].dateSeance) > new Date(derniereSeanceDate.dateSeance)) {
+        derniereSeanceDate = seances[i];
       }
-    }, seances[0]);
+    }
 
-    const derniereSeance = new Date(derniereSeanceFormatSimple.dateSeance).toISOString();
+    const premiereSeance = new Date(premiereSeanceDate.dateSeance).toISOString();
+    const derniereSeance = new Date(derniereSeanceDate.dateSeance).toISOString();
 
     res.status(200).json({
       athlete,
       totalSeances,
-      totalHeuresEntrainement,
-      totalCaloriesBrulees,
-      moyenneDureeSeance,
-      moyenneCaloriesParSeance,
+      totalHeures,
+      totalCalories,
+      dureeeMoyenne,
+      caloriesMoyennes,
       premiereSeance,
       derniereSeance
     });

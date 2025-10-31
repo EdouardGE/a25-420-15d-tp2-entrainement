@@ -28,9 +28,7 @@ const performanceExerciceSchema = new Schema(
 
     poids: {
       type: Number,
-      required: [true, "Le champ `poids` est requis!"],
-      default: 0,
-      min: [1, "Le poids doit être au moins 1 kg."],
+      min: [0, "Le poids doit pas être négatif."],
       max: [1000, "Le poids ne peut pas dépasser 1000 kg."],
     },
 

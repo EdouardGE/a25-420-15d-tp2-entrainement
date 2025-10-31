@@ -54,7 +54,7 @@ seanceSchema.methods.calculerCalories = async function () {
     }
 
     const dureeHeures = this.dureeMinutes / 60;
-    const facteurIntensite = 6;
+    const facteurIntensite = 6.17;
 
     const calories = athlete.poids * dureeHeures * facteurIntensite;
     this.caloriesBrulees = Math.round(calories);

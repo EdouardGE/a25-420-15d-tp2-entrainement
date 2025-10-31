@@ -81,23 +81,10 @@ export const mettreAJourAthlete = async (req, res, next) => {
     const athleteMisAJour = await athlete.save();
     res.status(200).location(`/athlete/${athleteMisAJour._id}`).json(athleteMisAJour);
   } catch (error) {
-<<<<<<< HEAD
     if (error.name === "ValidationError") {
       return res.status(422).json({ message: error.message });
     }
     next(error);
-=======
-     if (error.name === "CastError") {
-      return res.status(422).json({
-        message: "ID invalide !"
-      });
-    }
-    if (error.name === "ValidationError") {
-      return res.status(422).json({
-        message: "Un des champs n'est pas bien formatés"
-      });
-    }
->>>>>>> 87b1522b0843b3cc11f08e15a5f69d325895cb38
   }
 };
 
